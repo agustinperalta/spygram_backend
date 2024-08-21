@@ -24,14 +24,11 @@ jobs:
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
 
-    - name: Print GCP_SA_KEY
+    - name: Decode and authenticate Docker manually
       run: |
-        echo "${{ secrets.GCP_SA_KEY }}"
-    
-
-    - name: Debug GCP_SA_KEY
-      run: |
-          printf '%s' "${{ secrets.GCP_SA_KEY }}" | jq .
+        echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > /tmp/gcp_key.json
+        cat /tmp/gcp_key.json | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+      
       
       
       
