@@ -32,6 +32,7 @@ jobs:
         echo "${{ secrets.GCP_SA_KEY }}" | sed 's/\\n/\n/g' > /tmp/gcloud-key.json
         
         # Mostrar el contenido del archivo para verificar que se ha formateado correctamente
+        echo "Formatted JSON content:"
         cat /tmp/gcloud-key.json
         
         # Intentar autenticarse con Google Cloud usando el archivo JSON corregido
