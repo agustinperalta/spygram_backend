@@ -27,6 +27,9 @@ jobs:
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
 
+    - name: Display Docker config
+      run: cat ~/.docker/config.json
+
     - name: Build the Docker image
       run: |
         docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spygram-repo/my-fastapi-app .
