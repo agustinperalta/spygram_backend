@@ -32,7 +32,6 @@ jobs:
       
 
 
-
     - name: Build the Docker image
       run: |
         docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spygram-repo/my-fastapi-app .
