@@ -24,6 +24,10 @@ jobs:
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
 
+    - name: Debug GCP_SA_KEY
+      run: |
+        echo "${{ secrets.GCP_SA_KEY }}" | jq .
+      
     - name: Authenticate Docker manually
       run: |
         echo ${{ secrets.GCP_SA_KEY }} | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
@@ -31,7 +35,7 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spygram-repo/my-fastapi-app .
+        docker build -t us-central1-docker.pkg.dev/spygram/spygram-repo/my-fastapi-app .
     
     - name: Push Docker image
       run: |    
