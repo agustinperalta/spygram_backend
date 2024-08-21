@@ -24,9 +24,14 @@ jobs:
       run: |
         gcloud auth configure-docker us-central1-docker.pkg.dev
 
+    - name: Print GCP_SA_KEY
+      run: |
+        echo "${{ secrets.GCP_SA_KEY }}"
+    
+
     - name: Debug GCP_SA_KEY
       run: |
-        printf '%s' "${{ secrets.GCP_SA_KEY }}" | jq .
+          printf '%s' "${{ secrets.GCP_SA_KEY }}" | jq .
       
       
       
