@@ -32,7 +32,16 @@ jobs:
 
     - name: Authenticate Google Cloud
       run: |
+        # Reemplazar \n por saltos de línea reales y guardar en /tmp/gcloud-key.json
+        echo "${{ secrets.GCP_SA_KEY }}" | sed 's/\\n/\'$'\n''/g' > /tmp/gcloud-key.json
+        
+        # Mostrar el contenido del archivo para verificar que se ha formateado correctamente
+        cat /tmp/gcloud-key.json
+        
+        # Autenticar la cuenta de servicio usando el archivo JSON corregido
         gcloud auth activate-service-account --key-file=/tmp/gcloud-key.json
+        
+        # Configurar Docker para utilizar la autenticación con Google Cloud
         gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
 
