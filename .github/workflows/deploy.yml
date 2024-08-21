@@ -41,7 +41,7 @@ jobs:
         # Configurar Docker para utilizar la autenticación con Google Cloud
         gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
         
-        # Listar las cuentas autenticadas
+        # Listar las cuentas autenticada
         gcloud auth list
 
     - name: Build the Docker image
