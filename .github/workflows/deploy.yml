@@ -29,7 +29,7 @@ jobs:
     
     - name: Push Docker image
       run: |    
-        docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spygram-repo/my-fastapi-app
+        docker push us-central1-docker.pkg.dev/spygram/spygram-repo/my-fastapi-app
 
     - name: Deploy to Cloud Run
       run: |
