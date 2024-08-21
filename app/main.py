@@ -8,7 +8,7 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",  # Permitir solicitudes desde React
     "http://localhost:8501",  # Permitir solicitudes desde Streamlit
-    "https://spygram-frontend.vercel.app/"
+    "https://spygram-frontend.vercel.app"
     # Agrega aquí otros orígenes si es necesario
 ]
 
