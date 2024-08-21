@@ -2,25 +2,41 @@ import requests
 import json
 from datetime import datetime
 import aiohttp
+import os
+from dotenv import load_dotenv, find_dotenv
 
-def getCreds() :
-	""" Get creds required for use in the applications
-	
-	Returns:
-		dictonary: credentials needed globally
 
-	"""
+# Verifica el entorno de ejecución
+env = os.getenv('ENV', 'production')  # Por defecto, asume que está en producción
 
-	creds = dict() # dictionary to hold everything
-	creds['access_token'] = 'EAAOWmxWj5uABO1wwUn1lEskJZBWrRRHKebCDtG0BP6mbjHBR15MLXrDzwZBergdaWyRrDphksibcDVUHhZAxYqk7BfKxbZAEfiiKuYy1Mdvzu7ZA73sdSxhCMenDpQSpMl8TGsfbAHvZCRKKiqWOtWiKX6562xtd5WJgvvBpSyXQM20kyltNO0mgZDZD' # access token for use with all api calls
-	creds['client_id'] = '1010017757292256' # client id from facebook app IG Graph API Test
-	creds['client_secret'] = 'dfaeca94739282661dc064c8bd353f56' # client secret from facebook app
-	creds['graph_domain'] = 'https://graph.facebook.com/' # base domain for api calls
-	creds['graph_version'] = 'v20.0' # version of the api we are hitting
-	creds['endpoint_base'] = creds['graph_domain'] + creds['graph_version'] # base endpoint with domain and version
-	creds['debug'] = 'no' # debug mode for api call
+if env == 'local':
+    # Cargar variables desde el archivo .env si estamos en un entorno local
+    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+    load_dotenv(dotenv_path)
 
-	return creds
+
+
+
+def getCreds():
+    """Get creds required for use in the applications"""
+
+    creds = dict()
+    creds['access_token'] = os.getenv('FB_ACCESS_TOKEN')
+    creds['client_id'] = os.getenv('FB_CLIENT_ID')
+    creds['client_secret'] = os.getenv('FB_CLIENT_SECRET')
+    creds['graph_domain'] = 'https://graph.facebook.com/' # base domain for api calls
+    creds['graph_version'] = 'v20.0' # version of the api we are hitting
+    creds['endpoint_base'] = creds['graph_domain'] + creds['graph_version'] # base endpoint with domain and version
+    creds['debug'] = 'no' # debug mode for api call
+    # Validar que las credenciales han sido correctamente cargadas
+    if not creds['access_token']:
+        raise ValueError("FB_ACCESS_TOKEN no está configurado")
+    if not creds['client_id']:
+        raise ValueError("FB_CLIENT_ID no está configurado")
+    if not creds['client_secret']:
+        raise ValueError("FB_CLIENT_SECRET no está configurado")
+    
+    return creds
 
 def displayApiCallData( response ) :
 	""" Print out to cli response from api call """
