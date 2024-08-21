@@ -29,18 +29,18 @@ jobs:
         echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > /tmp/gcp_key.json
         cat /tmp/gcp_key.json | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
       
+    - name: Set the active account
+      run: |
+        gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
+        gcloud config set account "$(gcloud auth list --filter=status:ACTIVE --format='value(account)')"
       
-      
-  
-
-
     - name: Build the Docker image
       run: |
-        docker build -t us-central1-docker.pkg.dev/spygram/spygram-repo/my-fastapi-app .
+        docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spygram-repo/my-fastapi-app .
     
     - name: Push Docker image
       run: |    
-        docker push us-central1-docker.pkg.dev/spygram/spygram-repo/my-fastapi-app
+        docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spygram-repo/my-fastapi-app
 
     - name: Deploy to Cloud Run
       run: |
@@ -49,5 +49,6 @@ jobs:
           --platform managed \
           --region us-central1 \
           --allow-unauthenticated
+
 
 
