@@ -26,7 +26,8 @@ jobs:
 
     - name: Debug GCP_SA_KEY
       run: |
-        echo "${{ secrets.GCP_SA_KEY }}" | tr -d '\n' | jq .
+        printf '%s' "${{ secrets.GCP_SA_KEY }}" | jq .
+      
       
       
     - name: Authenticate Docker manually
