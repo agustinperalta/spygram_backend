@@ -22,10 +22,10 @@ jobs:
 
     - name: Verify JSON content
       run: |
-        echo "${{ secrets.GCP_SA_KEY }}" > /tmp/gcloud-key.json
+        printf "%s" "${{ secrets.GCP_SA_KEY }}" > /tmp/gcloud-key.json
         echo "Contents of the JSON file:"
         cat /tmp/gcloud-key.json
-
+        
     - name: Authenticate Google Cloud
       run: |
         # Reemplazar \n por saltos de línea reales y guardar en /tmp/gcloud-key.json
