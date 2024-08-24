@@ -1,9 +1,22 @@
 from datetime import datetime
-from app.utils import makeApiCall, getCreds
-from fastapi import APIRouter, HTTPException, Query
+from fastapi_csrf_protect import CsrfProtect
+from app.utils import makeApiCall, getCreds, load_env_variables
+from fastapi import APIRouter, HTTPException, Query,Depends,Request
 from typing import List, Optional
 from app.models import DiscoveryAccountRequest
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from dotenv import load_dotenv
+import os
 
+# Cargar variables de entorno
+load_env_variables()
+
+# Ahora carga la secret_key desde las variables de entorno
+secret_key = os.getenv('SECRET_KEY')
+
+# Asegúrate de que la clave secreta esté disponible
+if not secret_key:
+    raise ValueError("SECRET_KEY no está configurado en el archivo .env")
 
 router = APIRouter()
 
@@ -136,9 +149,27 @@ async def getDiscoveryAccount(params, user_name, since_date, account_metrics=Non
 async def discovery_account(
     user_name: str,
     fecha_desde: str,
+    request: Request,
     account_metrics: Optional[List[str]] = Query(None),
-    media_metrics: Optional[List[str]] = Query(None)
+    media_metrics: Optional[List[str]] = Query(None),
+    csrf_protect: CsrfProtect = Depends(),
 ):
+    # Verifica si el encabezado 'X-CSRF-Token' está presente en la solicitud
+    if 'X-CSRF-Token' not in request.headers:
+        raise HTTPException(status_code=400, detail="Missing CSRF token in headers")
+    # Obtener el token CSRF desde los encabezados de la solicitud
+    csrf_token = csrf_protect.get_csrf_from_headers(request.headers)
+    print(f"Token CSRF recibido desde el frontend: {csrf_token}")
+
+    # Crear un objeto URLSafeTimedSerializer para validar el token
+    serializer = URLSafeTimedSerializer(secret_key)
+
+    try:
+        # Validar el token CSRF
+        serializer.loads(csrf_token, max_age=60)
+    except (BadSignature, SignatureExpired) as e:
+        raise HTTPException(status_code=403, detail="CSRF token invalid or expired")
+    
     params = getCreds()
     try:
         fecha_desde_validada = DiscoveryAccountRequest.validate_fecha_desde(fecha_desde)
