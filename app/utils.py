@@ -9,7 +9,7 @@ def load_env_variables():
     """
     Carga las variables de entorno necesarias dependiendo del entorno de ejecución.
     """
-    env = os.getenv('ENV', 'local')
+    env = os.getenv('ENV', 'production')
 
     if env == 'local':
         # Cargar variables desde el archivo .env si estamos en un entorno local
