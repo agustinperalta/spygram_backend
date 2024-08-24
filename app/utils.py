@@ -1,21 +1,31 @@
-import requests
 import json
-from datetime import datetime
 import aiohttp
 import os
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
+from itsdangerous import URLSafeTimedSerializer
 
 
-# Verifica el entorno de ejecución
-env = os.getenv('ENV', 'production')  # Por defecto, asume que está en producción
+def load_env_variables():
+    """
+    Carga las variables de entorno necesarias dependiendo del entorno de ejecución.
+    """
+    env = os.getenv('ENV', 'local')
 
-if env == 'local':
-    # Cargar variables desde el archivo .env si estamos en un entorno local
-    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
+    if env == 'local':
+        # Cargar variables desde el archivo .env si estamos en un entorno local
+        dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+        load_dotenv(dotenv_path)
+
+# Cargar variables de entorno
+load_env_variables()
 
 
 
+def generate_csrf(secret_key):
+    # Usar URLSafeTimedSerializer para generar el token CSRF
+    serializer = URLSafeTimedSerializer(secret_key)
+    csrf_token = serializer.dumps('csrf_token')
+    return csrf_token
 
 def getCreds():
     """Get creds required for use in the applications"""
