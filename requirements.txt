@@ -4,3 +4,4 @@ aiohttp
 requests
 python-dotenv
 fastapi-csrf-protect
+redis
