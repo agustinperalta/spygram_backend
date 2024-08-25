@@ -57,7 +57,14 @@ def increment_request_count(ip: str):
 @router.get("/csrftoken")
 def get_csrf_token(request: Request,response: Response, csrf_protect: CsrfProtect = Depends()):
 
-    client_ip = request.client.host  # Obtiene la IP del cliente
+    # Intenta obtener la IP del cliente desde el encabezado 'X-Forwarded-For'
+    forwarded_for = request.headers.get('x-forwarded-for')
+    if forwarded_for:
+        # 'X-Forwarded-For' puede contener múltiples IPs si hay varios proxies, tomar la primera
+        client_ip = forwarded_for.split(',')[0].strip()
+    else:
+        # Fallback a la IP del cliente proporcionada por 'request.client.host'
+        client_ip = request.client.host
     print("ip client->",client_ip)
     # Verifica si se ha excedido el límite de solicitudes
     if rate_limit_exceeded(client_ip):
