@@ -49,6 +49,7 @@ jobs:
           --platform managed \
           --region us-central1 \
           --allow-unauthenticated \
-          --set-env-vars ENV=production,FB_ACCESS_TOKEN=${{ secrets.FB_ACCESS_TOKEN }},FB_CLIENT_ID=${{ secrets.FB_CLIENT_ID }},FB_CLIENT_SECRET=${{ secrets.FB_CLIENT_SECRET }},SECRET_KEY=${{secrets.SECRET_KEY}}
+          --vpc-egress "all" \
+          --set-env-vars ENV=production,FB_ACCESS_TOKEN=${{ secrets.FB_ACCESS_TOKEN }},FB_CLIENT_ID=${{ secrets.FB_CLIENT_ID }},FB_CLIENT_SECRET=${{ secrets.FB_CLIENT_SECRET }},SECRET_KEY=${{secrets.SECRET_KEY}},REDIS_HOST=${{secrets.REDIS_HOST}}
 
 
