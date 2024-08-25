@@ -31,6 +31,7 @@ def rate_limit_exceeded(ip: str) -> bool:
     current_time = datetime.utcnow()
     key = f"rate_limit:{ip}"
     requests = redis_client.lrange(key, 0, -1)
+    print("request->",requests)
 
     # Elimina solicitudes que están fuera del límite de tiempo de una hora
     valid_requests = [req for req in requests if datetime.strptime(req, '%Y-%m-%d %H:%M:%S.%f') > current_time - timedelta(hours=1)]
@@ -57,7 +58,7 @@ def increment_request_count(ip: str):
 def get_csrf_token(request: Request,response: Response, csrf_protect: CsrfProtect = Depends()):
 
     client_ip = request.client.host  # Obtiene la IP del cliente
-
+    print("ip client->",client_ip)
     # Verifica si se ha excedido el límite de solicitudes
     if rate_limit_exceeded(client_ip):
         raise HTTPException(status_code=429, detail="Too many requests")
